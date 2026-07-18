@@ -3,7 +3,7 @@ Update at the end of EVERY session (CLAUDE.md §3). This file is the resume poin
 
 ## Current State
 - **Milestone:** M0
-- **Next task:** M0-T3 (audit spine service + state-machine framework + OTP attestation service)
+- **Next task:** M0-T4 (rules-engine config service + CONFIG-REGISTER.md + PLACEHOLDER_ startup guard over rule config)
 - **Gates:** GATE-1 ☐  ·  GATE-2 ☐  ·  Launch ☐
 
 ## Task Log
@@ -11,7 +11,8 @@ Update at the end of EVERY session (CLAUDE.md §3). This file is the resume poin
 |---|---|---|---|
 | M0-T1 | **done** | 2026-07-18 | Repo scaffold (pnpm monorepo: `apps/api` NestJS, `apps/web` Next.js with five portal route-group shells per WP-13 §1, `packages/shared`). CI: lint + typecheck + test + PAN-pattern check (`scripts/check-pan-patterns.mjs`, Luhn-validated, with unit tests) [PAY-001]. IaC skeleton `infra/` pinned to AWS me-central-1, envs dev/uat [REG-007, REG-051]. PLACEHOLDER_ production boot-guard stub in `apps/api/src/config/placeholder-guard.ts` with tests (full config-register guard lands at M0-T4). Verified: API boots + `/health` ok; production boot with a PLACEHOLDER_ value refuses to start. `terraform validate` not run (no terraform binary in build environment) — validate in CI or locally before first apply. |
 | M0-T2 | **done** | 2026-07-18 | Data model core in `apps/api/src/db/`: migration `001_core_schema` (tenants, roles seeded per WP-09 §1, users, applications with J-R1 state CHECK, persons as separate lives, health_declarations sensitive store, quotes, policies, cases REF-001/003, audit_events). RLS ON + FORCED on all tenant-scoped tables [TEN-001]; access always drops to non-superuser `app_runtime` role via `withDbContext` (superusers bypass RLS). Health-data lock [TEN-002, REG-052]: SELECT restricted to underwriter + compliance_officer, capture is write-only, no UPDATE/DELETE policy. Quote immutability trigger [QR-030]. Audit table append-only trigger + platform-only read [J-R1]. 13 RLS tests green on embedded Postgres (pglite) — denial cases proven. |
-| M0-T3 | not started | | |
+| M0-T3 | **done** | 2026-07-18 | Audit service (`audit.service.ts`): sha256 before/after snapshot hashes + rule IDs [J-R1]. Guarded state-machine framework (`state-machine.ts`); application machine with full J-R1 chain — `issued` reachable only from `paid`, `registered` only from `issued`, UW-107 no-backdating guard at issuance; case machine per REF-003 with mandatory decision [REF-024]. `transitionApplication` persists with concurrent-drift check and appends audit event. OTP attestation service (JB-02/SC-07/SC-08/REF-021 shared): mock SMS adapter (`integrations/sms_otp/mock`), attempts limit, TTL, consumed challenges, artifact stored (code never stored, only hash) in append-only `attestations` table (migration 002). 14 new tests; 32 total green. |
+| M0-T4 | not started | | |
 
 ## Blocked — needs product owner
 | # | Item | What is needed | Raised | Resolved |
