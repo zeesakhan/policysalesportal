@@ -1,0 +1,29 @@
+import type { SqlExec } from './client';
+import { m001CoreSchema } from './migrations/m001_core_schema';
+
+export interface Migration {
+  id: string;
+  sql: string;
+}
+
+export const migrations: Migration[] = [m001CoreSchema];
+
+export async function runMigrations(exec: SqlExec): Promise<string[]> {
+  await exec.query(`CREATE TABLE IF NOT EXISTS schema_migrations (
+    id text PRIMARY KEY,
+    applied_at timestamptz NOT NULL DEFAULT now()
+  )`);
+
+  const applied: string[] = [];
+  for (const migration of migrations) {
+    const { rows } = await exec.query<{ id: string }>(
+      'SELECT id FROM schema_migrations WHERE id = $1',
+      [migration.id],
+    );
+    if (rows.length > 0) continue;
+    await exec.exec(migration.sql);
+    await exec.query('INSERT INTO schema_migrations (id) VALUES ($1)', [migration.id]);
+    applied.push(migration.id);
+  }
+  return applied;
+}
