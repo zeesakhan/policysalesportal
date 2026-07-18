@@ -3,23 +3,24 @@ Update at the end of EVERY session (CLAUDE.md §3). This file is the resume poin
 
 ## Current State
 - **Milestone:** M0
-- **Next task:** M0-T1
+- **Next task:** M0-T2 (data model core: tenants, users, roles, applications, persons, quotes, policies, cases, audit events; RLS on)
 - **Gates:** GATE-1 ☐  ·  GATE-2 ☐  ·  Launch ☐
 
 ## Task Log
 | Task | Status | Session date | Notes / rule IDs touched |
 |---|---|---|---|
-| M0-T1 | not started | | |
+| M0-T1 | **done** | 2026-07-18 | Repo scaffold (pnpm monorepo: `apps/api` NestJS, `apps/web` Next.js with five portal route-group shells per WP-13 §1, `packages/shared`). CI: lint + typecheck + test + PAN-pattern check (`scripts/check-pan-patterns.mjs`, Luhn-validated, with unit tests) [PAY-001]. IaC skeleton `infra/` pinned to AWS me-central-1, envs dev/uat [REG-007, REG-051]. PLACEHOLDER_ production boot-guard stub in `apps/api/src/config/placeholder-guard.ts` with tests (full config-register guard lands at M0-T4). Verified: API boots + `/health` ok; production boot with a PLACEHOLDER_ value refuses to start. `terraform validate` not run (no terraform binary in build environment) — validate in CI or locally before first apply. |
+| M0-T2 | not started | | |
 
 ## Blocked — needs product owner
 | # | Item | What is needed | Raised | Resolved |
 |---|---|---|---|---|
-| | | | | |
+| B1 | Terraform state backend | Project AWS account (me-central-1) + real values for `PLACEHOLDER_tf_state_bucket` (S3 state bucket, lock config) in `infra/envs/*/main.tf`. Until then `terraform init -backend=false` only. | 2026-07-18 | |
 
 ## Decisions Made (product owner only)
 | # | Date | Decision |
 |---|---|---|
-| D-B1 | | Stack confirmation or override (ARCHITECTURE §1) |
+| D-B1 | 2026-07-18 | Stack confirmed = ARCHITECTURE §1 default: NestJS + PostgreSQL + Next.js monorepo; config-driven rules engine; Terraform IaC targeting AWS me-central-1. |
 
 ## Spec Gaps Found (candidate WP amendments — do not self-resolve)
 | # | Gap | WP affected | Status |
@@ -27,4 +28,4 @@ Update at the end of EVERY session (CLAUDE.md §3). This file is the resume poin
 | | | | |
 
 ## Placeholder Register Snapshot
-Count of PLACEHOLDER_ config values remaining: (auto-generate from CONFIG-REGISTER.md)
+CONFIG-REGISTER.md not yet generated (arrives at M0-T4). Interim `PLACEHOLDER_` values in the tree: `DATABASE_URL` (`apps/api/.env.example`), `PLACEHOLDER_tf_state_bucket` (`infra/envs/dev`, `infra/envs/uat`).
