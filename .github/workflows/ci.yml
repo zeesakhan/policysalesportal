@@ -37,3 +37,7 @@ jobs:
       # ARCHITECTURE §2 / PAY-001: no card data anywhere, enforced in CI
       - name: PAN-pattern check
         run: pnpm check:pan
+
+      # ARCHITECTURE §2: referenced content keys must exist in the EN catalog
+      - name: i18n key check
+        run: pnpm check:i18n

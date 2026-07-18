@@ -66,6 +66,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@psp/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       next:
         specifier: ^15.3.0
         version: 15.5.20(react-dom@19.2.7(react@19.2.7))(react@19.2.7)

@@ -1,0 +1,14 @@
+{
+  "common.continue": "متابعة",
+  "common.back": "رجوع",
+  "common.save_resume": "احفظ وتابع لاحقاً",
+  "sc01.title": "احصل على تأمينك الصحي",
+  "sc01.language.label": "اختر لغتك",
+  "sc01.consent.label": "أوافق على إشعار الخصوصية",
+  "sc02.title": "أين صدرت تأشيرتك؟",
+  "sc02.emirate.label": "إمارة إصدار التأشيرة",
+  "sc02.emirate.help": "تجدها على التأشيرة أو الهوية الإماراتية",
+  "sc02.visa_status.label": "حالة التأشيرة",
+  "portal.customer.title": "بوابة بيع الوثائق",
+  "portal.customer.tagline": "تغطية صحية لك ولعائلتك خلال دقائق"
+}

@@ -1,0 +1,14 @@
+{
+  "common.continue": "Continue",
+  "common.back": "Back",
+  "common.save_resume": "Save and continue later",
+  "sc01.title": "Get your health insurance",
+  "sc01.language.label": "Choose your language",
+  "sc01.consent.label": "I agree to the privacy notice",
+  "sc02.title": "Where was your visa issued?",
+  "sc02.emirate.label": "Emirate of visa issuance",
+  "sc02.emirate.help": "You can find this on your visa or Emirates ID",
+  "sc02.visa_status.label": "Visa status",
+  "portal.customer.title": "Policy Sales Portal",
+  "portal.customer.tagline": "Health cover for you and your family, in minutes"
+}

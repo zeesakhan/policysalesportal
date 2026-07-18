@@ -12,3 +12,5 @@ export const PLACEHOLDER_PREFIX = 'PLACEHOLDER_';
 export type RuleIdPrefix = 'REG' | 'UW' | 'QR' | 'KYC' | 'PAY' | 'REF' | 'TEN' | 'END' | 'MIS';
 
 export type RuleId = `${RuleIdPrefix}-${number}${string}`;
+
+export * from './i18n';
