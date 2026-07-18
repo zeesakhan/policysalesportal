@@ -14,7 +14,8 @@
     "typecheck": "pnpm -r --if-present typecheck",
     "build": "pnpm -r --if-present build",
     "test": "vitest run",
-    "check:pan": "node scripts/check-pan-patterns.mjs"
+    "check:pan": "node scripts/check-pan-patterns.mjs",
+    "gen:config-register": "pnpm --filter @psp/api build && node apps/api/dist/rules/config-register-cli.js docs/build/CONFIG-REGISTER.md"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
