@@ -16,9 +16,9 @@ export interface TestDb {
 export async function makeTestDb(): Promise<TestDb> {
   const db = new PGlite();
   const exec: SqlExec = {
-    query: async (sql, params) => {
-      const res = await db.query(sql, params as unknown[]);
-      return { rows: res.rows as Record<string, unknown>[] };
+    query: async <R = Record<string, unknown>>(sql: string, params?: unknown[]) => {
+      const res = await db.query(sql, params);
+      return { rows: res.rows as R[] };
     },
     exec: async (sql) => {
       await db.exec(sql);

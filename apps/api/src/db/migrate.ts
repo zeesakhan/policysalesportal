@@ -2,13 +2,19 @@ import type { SqlExec } from './client';
 import { m001CoreSchema } from './migrations/m001_core_schema';
 import { m002Attestations } from './migrations/m002_attestations';
 import { m003JourneyFields } from './migrations/m003_journey_fields';
+import { m004Identity } from './migrations/m004_identity';
 
 export interface Migration {
   id: string;
   sql: string;
 }
 
-export const migrations: Migration[] = [m001CoreSchema, m002Attestations, m003JourneyFields];
+export const migrations: Migration[] = [
+  m001CoreSchema,
+  m002Attestations,
+  m003JourneyFields,
+  m004Identity,
+];
 
 export async function runMigrations(exec: SqlExec): Promise<string[]> {
   await exec.query(`CREATE TABLE IF NOT EXISTS schema_migrations (

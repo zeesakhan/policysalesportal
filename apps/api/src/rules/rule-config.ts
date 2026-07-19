@@ -39,6 +39,14 @@ export const defaultRuleConfig: RuleConfigEntry[] = [
     value: 'PLACEHOLDER_salary_threshold',
   },
   {
+    key: 'UW_102_NAME_MATCH_THRESHOLD',
+    ruleIds: ['UW-102'],
+    source: 'SPEC',
+    description:
+      'Fuzzy-match threshold for OCR vs entered name (SC-03); engineering default, insurer may tune via annex',
+    value: 0.8,
+  },
+  {
     key: 'PAY_003_PAYMENT_WINDOW_HOURS',
     ruleIds: ['PAY-003'],
     source: 'SPEC',
