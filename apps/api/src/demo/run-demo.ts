@@ -1,5 +1,6 @@
 // GATE-1 demo (M1-T11): drives the real engine end-to-end on mocks for all
 // three regulatory regimes and prints every stage. Run: `pnpm demo`.
+import { randomUUID } from 'node:crypto';
 import { PGlite } from '@electric-sql/pglite';
 import { withDbContext, type DbContext, type SqlExec } from '../db/client';
 import { runMigrations } from '../db/migrate';
@@ -132,7 +133,7 @@ async function main(): Promise<void> {
     underwriterDecide(tx, db.asPlatform, rules, {
       caseId: decision.caseId!,
       tenantId,
-      actorUserId: '00000000-0000-0000-0000-000000000001',
+      actorUserId: randomUUID(),
       decision: 'accept_with_terms',
       rationale: 'loading for surgical history',
       loadingPct: 25,

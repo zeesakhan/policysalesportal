@@ -24,5 +24,7 @@ describe('PAN-pattern check (ARCHITECTURE §2 / PAY-001)', () => {
     expect(findPanCandidates('policy PSP-2026-000123 issued')).toHaveLength(0);
     expect(findPanCandidates('digits 1234567890123456 fail luhn')).toHaveLength(0);
     expect(findPanCandidates('an Emirates ID is 784-XXXX-XXXXXXX-X masked')).toHaveLength(0);
+    // zero-filled UUIDs are repeated-digit runs, never PANs
+    expect(findPanCandidates('id 00000000-0000-0000-0000-000000000001')).toHaveLength(0);
   });
 });

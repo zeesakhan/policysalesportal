@@ -40,6 +40,9 @@ export function findPanCandidates(text) {
   const hits = [];
   for (const match of text.matchAll(CANDIDATE_RE)) {
     const digits = match[0].replace(/[ -]/g, '');
+    // A run of one repeated digit (e.g. zero-filled UUID segments) is never a
+    // real PAN even when it satisfies Luhn
+    if (/^(\d)\1+$/.test(digits)) continue;
     if (digits.length >= 13 && digits.length <= 19 && luhnValid(digits)) {
       hits.push(match[0]);
     }
