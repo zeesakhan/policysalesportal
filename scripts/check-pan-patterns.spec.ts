@@ -27,4 +27,15 @@ describe('PAN-pattern check (ARCHITECTURE §2 / PAY-001)', () => {
     // zero-filled UUIDs are repeated-digit runs, never PANs
     expect(findPanCandidates('id 00000000-0000-0000-0000-000000000001')).toHaveLength(0);
   });
+
+  it('never flags a random UUID, even when its digit-only sub-runs happen to be Luhn-valid', () => {
+    // A UUID whose non-dash segments are entirely numeric: 89148993671098
+    // (14 digits) is Luhn-valid, but this is a UUID, never a PAN.
+    const uuidWithLuhnValidDigits = '89148993-6710-9855-8214-671098558214';
+    expect(findPanCandidates(`id "${uuidWithLuhnValidDigits}"`)).toHaveLength(0);
+    // a real PAN sitting right next to a UUID is still caught
+    expect(
+      findPanCandidates(`id ${uuidWithLuhnValidDigits} card=${visaTestPan}`),
+    ).toHaveLength(1);
+  });
 });

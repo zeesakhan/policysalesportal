@@ -31,6 +31,8 @@ export interface QuoteBreakdown {
   productName: string;
   rateTableVersion: string;
   options: QuoteOptions;
+  /** UW-306: married female EBP buyers see maternity terms + waiting-period notice. */
+  maternityNotice: boolean;
 }
 
 interface RateMatrix {
@@ -119,8 +121,8 @@ export async function generateQuote(
   if (rate.rows.length === 0) throw new JourneyRuleError('QR-001', 'no active rate table');
   const { version, matrix } = rate.rows[0]!;
 
-  const lives = await exec.query<{ id: string; full_name: string; dob: string | null }>(
-    'SELECT id, full_name, dob FROM persons WHERE application_id = $1',
+  const lives = await exec.query<{ id: string; full_name: string; dob: string | null; gender: string | null; kind: string }>(
+    'SELECT id, full_name, dob, gender, kind FROM persons WHERE application_id = $1',
     [args.applicationId],
   );
   if (lives.rows.length === 0) throw new JourneyRuleError('QR-006', 'no insured lives captured');
@@ -178,6 +180,14 @@ export async function generateQuote(
   const kind =
     args.kindOverride ?? (p.declaration_required ? ('indicative' as const) : ('final' as const));
 
+  // UW-306: married female EBP buyers see maternity terms + waiting-period
+  // notice. SC-04/SC-05 capture no standalone marital-status field — the
+  // operationalization here is "female applicant on a maternity-bearing
+  // track" (Dubai EBP or enhanced), the safe superset until the product
+  // owner confirms a marital-status field (flagged in PROGRESS.md).
+  const applicant = lives.rows.find((l) => l.kind === 'applicant');
+  const maternityNotice = Boolean((regime === 'dubai' || track === 'enhanced') && applicant?.gender === 'female');
+
   const breakdown: QuoteBreakdown = {
     lines,
     base: baseSum,
@@ -190,6 +200,7 @@ export async function generateQuote(
     productName: p.name,
     rateTableVersion: version,
     options,
+    maternityNotice,
   };
 
   // QR-030: a new quote supersedes previous active quotes — never mutate

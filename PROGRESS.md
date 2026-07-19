@@ -2,9 +2,9 @@
 Update at the end of EVERY session (CLAUDE.md §3). This file is the resume point: a new session must be able to continue from this file alone.
 
 ## Current State
-- **Milestone:** M3 **complete** (lifecycle + money: endorsements, cancellations/refunds with clawback, renewals, ledgers, reports — reconciling to the three-way match)
-- **Next task:** M4-T1 (UAT environment seeded with UAT-PLAN data pack; mocks deterministic)
-- **Gates:** GATE-1 ☑ pre-approved (D-B2; demo evidence delivered — `pnpm demo`)  ·  GATE-2 ☐ pre-approved pending M4 report (D-B2)  ·  Launch ☐
+- **Milestone:** M4 **complete** (UAT: 42/42 WP-12 Part B scenarios automated and passing, zero open defects; manual physical scripts written but NOT executed — see uat/UAT-REPORT.md §4)
+- **Next task:** M5 mock-safe items (authz sweep, runbooks, RELEASE-READINESS walkthrough)
+- **Gates:** GATE-1 ☑ pre-approved (D-B2; demo evidence delivered — `pnpm demo`)  ·  GATE-2 ☑ pre-approved (D-B2; UAT report delivered — `uat/UAT-REPORT.md`, automated evidence complete, manual evidence explicitly outstanding)  ·  Launch ☐
 
 ## Task Log
 | Task | Status | Session date | Notes / rule IDs touched |
@@ -37,7 +37,12 @@ Update at the end of EVERY session (CLAUDE.md §3). This file is the resume poin
 | M3-T3 | **done** | 2026-07-19 | Renewals: 60/30/7-day notices, lapse sweep [END-021], one-tap renewal evaluation re-runs age eligibility (UW-202/503 at renewal) against current rate table [END-020]. |
 | M3-T4 | **done** | 2026-07-19 | Ledgers (`money.service.ts`): commission receivable with REG-004 10-business-day aging [QR-020], downstream payouts accrue ONLY on registered [QR-021] (config placeholders + dev defaults), payout statements accrued/paid/clawed. |
 | M3-T5 | **done** | 2026-07-19 | Reports (`reports.service.ts`) [MIS-001..020]: daily sales register with STP/referral rates, exceptions (PAY-030 orphans + REF-012 SLA breaches with info-request pause), compliance pack (volumes only), conduct monitor [TEN-011], per-policy bordereau tying to commission, DSAR extract [MIS-011], metrics dictionary [MIS-020]. All exposed via REST for the portals. 10 tests across M3. |
-| M4-T1 | not started | | |
+| M4-T1 | **done** | 2026-07-19 | UAT environment: `apps/api/src/uat/uat-fixtures.ts` (setupUatEnv, driveToQuote/startAndRoute helpers), `apps/api/src/uat/personas.ts` — 20 of the 25 UAT-PLAN §2 personas exercised by the 42 published scenarios (P08/P10/P19 not referenced by any WP-12 scenario — not fabricated to fill unused slots). Mocks run in deterministic per-scenario mode (ICP pass/fail, screening clear/potential/confirmed/whitelisted, registration success/fail×N, payment confirmed/expired) — each scenario programs the exact mode WP-12 specifies. |
+| M4-T2 | **done** | 2026-07-19 | All 42 WP-12 Part B scenarios (U-01..U-86, non-contiguous IDs as published — no invented scenarios to fill numbering gaps) automated as `apps/api/src/uat/scenarios/*.uat.spec.ts`, one `it('U-XX ...')` per scenario with a `// rules:` citation. `pnpm gen:traceability` generates `uat/matrix/TRACEABILITY.md` from the spec files themselves (can't drift from what runs) — 42/42 mapped, 0 unmapped. All 42 passing, confirmed stable across repeated runs. |
+| M4-T3 | **done** | 2026-07-19 | 3 manual scripts written to `uat/manual/`: typing-centre assisted physical flow (JB-02/06, TC-04 print), Arabic/RTL visual check (REG-061), WhatsApp readability in 5 languages (PAY-024). Each has a step-by-step checklist + sign-off table. **Honestly marked NOT YET EXECUTED** — they require real hardware (card reader, printer), a live WhatsApp Business API with approved templates (M5-T1), and native-language reviewers, none of which exist in this build environment. |
+| M4-T4 | **done** | 2026-07-19 | Defect cycle: 3 defects found while authoring scenarios, all fixed at the code (never the test) — TEN-011 tenant-suspension gate was unenforced (High, fixed in `entry.service.ts`); UW-306 maternity notice was cited but never implemented (Medium, fixed in `quote.service.ts`, see gap G2 below); PAN-checker false-positived on random UUIDs (Low, fixed in `check-pan-patterns.mjs` at the root cause). See `uat/DEFECT-LOG.md`. Zero open defects. |
+| M4-T5 | **done** | 2026-07-19 | `uat/UAT-REPORT.md` produced: 42/42 scenarios pass, 0 open critical/high defects, security-relevant scenarios (U-63/U-71/U-72) evidenced, manual evidence pack explicitly flagged outstanding (not glossed over). GATE-2 recorded pre-approved per D-B2 — automated behaviour ready; manual evidence remains a real RELEASE-READINESS item for M5. |
+| M5-mock | not started | | |
 
 ## Blocked — needs product owner
 | # | Item | What is needed | Raised | Resolved |
@@ -54,6 +59,7 @@ Update at the end of EVERY session (CLAUDE.md §3). This file is the resume poin
 | # | Gap | WP affected | Status |
 |---|---|---|---|
 | G1 | ARCHITECTURE §2 marks only AR as RTL, but Urdu (UR) uses an Arabic-derived script and is also RTL. Code marks both AR and UR as RTL (script direction is a technical property, not a business rule) — please confirm or amend the architecture note. | docs/build/ARCHITECTURE.md §2 | raised 2026-07-18 |
+| G2 | UW-306 requires the maternity-terms notice for "married female" EBP/enhanced buyers, but WP-13 SC-04/SC-05 field lists capture no standalone marital-status field. Implemented as "female applicant on a Dubai/enhanced track" (safe superset — shows the notice to more people than the literal rule, never fewer) pending a decision on whether to add a marital-status field. | docs/requirements/WP-04 UW-306, WP-13 SC-04/05 | raised 2026-07-19 |
 
 ## Placeholder Register Snapshot
 `docs/build/CONFIG-REGISTER.md` generated (`pnpm gen:config-register`): **3** rule-config placeholders remaining (UW_502_AUTO_ACCEPT_LIST, QR_001_RATE_TABLE_CURRENT_VERSION, UW_301_SALARY_BAND_THRESHOLD_AED). Additional env/infra placeholders: `DATABASE_URL` (`apps/api/.env.example`), `PLACEHOLDER_tf_state_bucket` (`infra/envs/dev`, `infra/envs/uat`). Production boot refuses while any remain (verified).

@@ -36,6 +36,14 @@ export async function startApplication(
   if (!args.privacyConsent) {
     throw new JourneyRuleError('REG-050', 'privacy consent is required to start an application');
   }
+  // TEN-011: suspension is immediate-effect — no new business through a
+  // suspended tenant; in-flight applications (already started) are unaffected
+  const tenant = await exec.query<{ status: string }>('SELECT status FROM tenants WHERE id = $1', [
+    args.tenantId,
+  ]);
+  if (tenant.rows[0]?.status === 'suspended') {
+    throw new JourneyRuleError('TEN-011', 'tenant is suspended — no new business permitted');
+  }
   const inserted = await exec.query<{ id: string }>(
     `INSERT INTO applications (tenant_id, acting_user_id, channel, language, affiliate_code, consent_at)
      VALUES ($1, $2, $3, $4, $5, now()) RETURNING id`,

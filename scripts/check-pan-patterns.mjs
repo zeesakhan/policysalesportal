@@ -7,6 +7,10 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 
 const CANDIDATE_RE = /(?<![\d])(?:\d[ -]?){12,18}\d(?![\d])/g;
+// Canonical UUID (8-4-4-4-12 hex groups). A UUID's digit-only sub-runs can
+// coincidentally be Luhn-valid (e.g. runtime-generated ids in tests) but a
+// UUID is never a PAN — strip these before scanning so they can't false-positive.
+const UUID_RE = /\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b/g;
 
 const SKIP_FILES = new Set(['pnpm-lock.yaml']);
 const SKIP_EXTENSIONS = new Set([
@@ -38,7 +42,8 @@ export function luhnValid(digits) {
 
 export function findPanCandidates(text) {
   const hits = [];
-  for (const match of text.matchAll(CANDIDATE_RE)) {
+  const withoutUuids = text.replace(UUID_RE, (m) => 'U'.repeat(m.length));
+  for (const match of withoutUuids.matchAll(CANDIDATE_RE)) {
     const digits = match[0].replace(/[ -]/g, '');
     // A run of one repeated digit (e.g. zero-filled UUID segments) is never a
     // real PAN even when it satisfies Luhn
