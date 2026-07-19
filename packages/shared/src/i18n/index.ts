@@ -1,11 +1,13 @@
 import ar from './catalogs/ar.json';
+import bn from './catalogs/bn.json';
 import en from './catalogs/en.json';
+import hi from './catalogs/hi.json';
+import ur from './catalogs/ur.json';
 
 /**
  * i18n framework (ARCHITECTURE §2): EN/UR/HI/BN/AR content keys from day one;
- * hardcoded customer-facing strings are a defect. EN and AR are seeded at
- * M0-T5; UR/HI/BN catalogs are filled during M2-T1 (customer portal polish)
- * and fall back to EN until then.
+ * hardcoded customer-facing strings are a defect. All five catalogs are
+ * seeded (M2-T1); new keys fall back to EN until translated.
  */
 export const LOCALES = ['en', 'ur', 'hi', 'bn', 'ar'] as const;
 export type Locale = (typeof LOCALES)[number];
@@ -19,6 +21,9 @@ const RTL_LOCALES: readonly Locale[] = ['ar', 'ur'];
 
 export const catalogs: Partial<Record<Locale, Catalog>> = {
   en: en as Catalog,
+  ur: ur as Catalog,
+  hi: hi as Catalog,
+  bn: bn as Catalog,
   ar: ar as Catalog,
 };
 

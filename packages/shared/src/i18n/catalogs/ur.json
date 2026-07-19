@@ -1,0 +1,14 @@
+{
+  "common.continue": "جاری رکھیں",
+  "common.back": "واپس",
+  "common.save_resume": "محفوظ کریں اور بعد میں جاری رکھیں",
+  "sc01.title": "اپنی صحت کی انشورنس حاصل کریں",
+  "sc01.language.label": "اپنی زبان منتخب کریں",
+  "sc01.consent.label": "میں رازداری کے نوٹس سے اتفاق کرتا ہوں",
+  "sc02.title": "آپ کا ویزا کہاں سے جاری ہوا؟",
+  "sc02.emirate.label": "ویزا جاری کرنے والی امارات",
+  "sc02.emirate.help": "یہ آپ کے ویزا یا ایمریٹس آئی ڈی پر درج ہے",
+  "sc02.visa_status.label": "ویزا کی حیثیت",
+  "portal.customer.title": "پالیسی سیلز پورٹل",
+  "portal.customer.tagline": "آپ اور آپ کے خاندان کے لیے چند منٹوں میں صحت کا تحفظ"
+}

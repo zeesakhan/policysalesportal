@@ -2,8 +2,8 @@
 Update at the end of EVERY session (CLAUDE.md §3). This file is the resume point: a new session must be able to continue from this file alone.
 
 ## Current State
-- **Milestone:** M1 **complete** (done-criterion: all three regimes STP end-to-end on mocks ✓ — see `pnpm demo` and `e2e-regimes.spec.ts`)
-- **Next task:** M2-T1 (customer portal polish: mobile-first, 5 languages, RTL, accessibility pass)
+- **Milestone:** M2 **complete** (five portals functional per WP-13 screen lists, all wrapping the one engine API)
+- **Next task:** M3-T1 (endorsement catalogue END-002 incl. newborn SLA warning, EID-addition task)
 - **Gates:** GATE-1 ☑ pre-approved (D-B2; demo evidence delivered — `pnpm demo`)  ·  GATE-2 ☐ pre-approved pending M4 report (D-B2)  ·  Launch ☐
 
 ## Task Log
@@ -25,7 +25,14 @@ Update at the end of EVERY session (CLAUDE.md §3). This file is the resume poin
 | M1-T9 | **done** | 2026-07-19 | Issuance (S9): paid→issued (insurer mock, UW-107 no-backdating guard)→registered [PAY-020..022]; KYC-011 stale-screening block; registration fail×3→highest-priority ops ticket + "processing — no action needed" [PAY-023]; ops retry resolves; three-state tracker (Paid→Issued→visa-ready); three-way match job detects paid-not-issued / issued-not-registered / confirmed-not-paid orphans [PAY-030]. 5 tests. |
 | M1-T10 | **done** | 2026-07-19 | Delivery (SC-10..12): policy pack via WhatsApp+email mocks after registered only [PAY-024/022]; my-policies by mobile; save & resume token 14-day retention with WhatsApp link + ONE abandonment reminder max [J-R2]. 5 tests. |
 | M1-T11 | **done** | 2026-07-19 | GATE-1 evidence: `pnpm demo` runs all three regimes STP end-to-end on mocks (quote→OTP→insurer payment→issue→register→deliver, visa-ready ✓) plus enhanced REFER→counter-offer flow; automated in `e2e-regimes.spec.ts` incl. audit-spine coverage check [J-R1]. GATE-1 recorded pre-approved per D-B2. |
-| M2-T1 | not started | | |
+| M2-API | **done** | 2026-07-19 | REST engine API (`apps/api/src/http/`): the one engine behind five skins — journey endpoints, attestations, payment+webhook, issuance, cases/decisions, screening dispositions, counter-offer acceptance, ops retry, tenants, rates/campaigns, bulk intake, exceptions, audit, affiliate stats. Mock header auth (real IdP M5-T2) — RLS still the enforcement layer. Dev pglite provider boots engine with zero infra. Smoke-tested over HTTP. |
+| M2-T1 | **done** | 2026-07-19 | Customer portal: SC-01/02 landing (5-language switcher, RTL dir, consent gate, visit-visa decline SC-14 category) + `/apply/[id]` state-driven engine screens SC-03..SC-10 (identity/details, plan cards from regime-filtered catalogue, itemised price, declaration with sensitive consent, decision, OTP review attestation, insurer payment, three-state tracker). UR/HI/BN catalogs seeded to full parity. |
+| M2-T2 | **done** | 2026-07-19 | Typing-centre portal TC-01..04: consent-FIRST new application (TC-02a OTP to customer phone, JB-02), application list (no declaration content — TEN-002), engine flow with operator context, print pack gated on Active&registered. |
+| M2-T3 | **done** | 2026-07-19 | Broker portal BR-01/02/05/06: pipeline/client book, CSV bulk intake with per-life validation report (each life individually screened — BR-05), referral tracker with SLA countdown (status only). |
+| M2-T4 | **done** | 2026-07-19 | Insurer/TPA portal IN-01/03/05/06: referral queue with SLA clocks + accept/accept-with-terms/decline recording [REF-020..024], versioned rate-table publisher [QR-001/030], campaigns view [REG-005], registration-ops queue with retry [PAY-023]. |
+| M2-T5 | **done** | 2026-07-19 | Platform admin AD-01/03/07/08: tenant lifecycle with status switch [TEN-010..012], compliance workbench dispositions [KYC-012], audit viewer by entity [MIS-010], three-way-match exceptions [PAY-030]. |
+| M2-T6 | **done** | 2026-07-19 | Affiliate: attribution flows through SC-01 (QR-023 code capture on start), affiliate view shows counts/conversions only — zero PII [TEN-003]; share-link with ?aff= code. |
+| M3-T1 | not started | | |
 
 ## Blocked — needs product owner
 | # | Item | What is needed | Raised | Resolved |

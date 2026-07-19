@@ -401,6 +401,17 @@ export class EngineController {
     return this.db.run(ctx, (tx) => expirePaymentWindows(tx));
   }
 
+  @Get('admin/tenants')
+  tenants(@Req() req: Request, @Query('type') type?: string) {
+    const ctx = portalContext(req);
+    return this.db.run(ctx, (tx) =>
+      tx.query(
+        `SELECT id, type, name, status FROM tenants ${type ? 'WHERE type = $1' : ''} ORDER BY created_at`,
+        type ? [type] : [],
+      ),
+    );
+  }
+
   @Post('admin/tenants')
   createTenant(@Req() req: Request, @Body() body: { type: string; name: string; status?: string }) {
     const ctx = portalContext(req);
@@ -432,6 +443,119 @@ export class EngineController {
         [entityId],
       ),
     );
+  }
+
+  // ------------------------------------------------------- insurer configs
+  @Get('rates')
+  rates(@Req() req: Request, @Query('productCode') productCode?: string) {
+    const ctx = portalContext(req);
+    return this.db.run(ctx, (tx) =>
+      tx.query(
+        `SELECT id, version, product_code, status, effective_from FROM rate_tables
+         ${productCode ? 'WHERE product_code = $1' : ''} ORDER BY effective_from DESC`,
+        productCode ? [productCode] : [],
+      ),
+    );
+  }
+
+  /** IN-03: publish a new rate-table version; previous version superseded (QR-001/030). */
+  @Post('rates')
+  publishRates(
+    @Req() req: Request,
+    @Body() body: { productCode: string; version: string; effectiveFrom: string; matrix: unknown },
+  ) {
+    const ctx = portalContext(req);
+    return this.db.run(ctx, async (tx) => {
+      await tx.query(
+        `UPDATE rate_tables SET status = 'superseded' WHERE product_code = $1 AND status = 'active'`,
+        [body.productCode],
+      );
+      return tx.query(
+        `INSERT INTO rate_tables (version, product_code, effective_from, matrix)
+         VALUES ($1, $2, $3, $4) RETURNING id, version`,
+        [body.version, body.productCode, body.effectiveFrom, JSON.stringify(body.matrix)],
+      );
+    });
+  }
+
+  @Get('campaigns')
+  campaigns(@Req() req: Request) {
+    const ctx = portalContext(req);
+    return this.db.run(ctx, (tx) => tx.query(`SELECT * FROM campaigns ORDER BY valid_from DESC`));
+  }
+
+  // ---------------------------------------------------------- broker bulk
+  /**
+   * BR-05: CSV-style bulk intake — per-life validation report; every valid
+   * row still runs the full individual journey (screening/rating per life).
+   */
+  @Post('bulk/applications')
+  async bulk(
+    @Req() req: Request,
+    @Body()
+    body: {
+      rows: {
+        emirateOfVisa: Emirate;
+        visaStatus: VisaStatus;
+        eid?: string;
+        fullName: string;
+        dob: string;
+        gender: string;
+        nationality: string;
+      }[];
+    },
+  ) {
+    const ctx = portalContext(req);
+    const report: { row: number; status: string; applicationId?: string; error?: string }[] = [];
+    for (let i = 0; i < body.rows.length; i++) {
+      const row = body.rows[i]!;
+      try {
+        const result = await this.db.run(ctx, async (tx) => {
+          const { applicationId } = await startApplication(tx, {
+            tenantId: ctx.tenantId!,
+            actingUserId: ctx.userId,
+            channel: 'broker',
+            language: 'en',
+            privacyConsent: true,
+          });
+          const routed = await routeRegime(tx, {
+            applicationId,
+            tenantId: ctx.tenantId!,
+            emirateOfVisa: row.emirateOfVisa,
+            visaStatus: row.visaStatus,
+          });
+          if (routed.declined) return { applicationId, status: 'declined' };
+          const identity = await captureIdentity(
+            tx,
+            (fn) => this.db.runSystem(fn),
+            this.icp,
+            this.rules,
+            {
+              applicationId,
+              tenantId: ctx.tenantId!,
+              eid: row.eid,
+              fullName: row.fullName,
+              dob: row.dob,
+              gender: row.gender,
+              nationality: row.nationality,
+            },
+          );
+          return { applicationId, status: identity.outcome };
+        });
+        report.push({ row: i + 1, ...result });
+      } catch (err) {
+        report.push({ row: i + 1, status: 'error', error: (err as Error).message });
+      }
+    }
+    return { report };
+  }
+
+  // ------------------------------------------------------------- dev-only
+  /** Dev/UAT convenience: last mock-SMS message (OTP codes) — never in production. */
+  @Get('dev/last-sms')
+  lastSms() {
+    if (process.env.NODE_ENV === 'production') throw new HttpException('not found', 404);
+    return { last: this.sms.sent[this.sms.sent.length - 1] ?? null };
   }
 
   // -------------------------------------------------------------- affiliate

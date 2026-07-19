@@ -1,0 +1,14 @@
+{
+  "common.continue": "आगे बढ़ें",
+  "common.back": "वापस",
+  "common.save_resume": "सहेजें और बाद में जारी रखें",
+  "sc01.title": "अपना स्वास्थ्य बीमा प्राप्त करें",
+  "sc01.language.label": "अपनी भाषा चुनें",
+  "sc01.consent.label": "मैं गोपनीयता सूचना से सहमत हूँ",
+  "sc02.title": "आपका वीज़ा कहाँ से जारी हुआ?",
+  "sc02.emirate.label": "वीज़ा जारी करने वाला अमीरात",
+  "sc02.emirate.help": "यह आपके वीज़ा या एमिरेट्स आईडी पर लिखा है",
+  "sc02.visa_status.label": "वीज़ा स्थिति",
+  "portal.customer.title": "पॉलिसी सेल्स पोर्टल",
+  "portal.customer.tagline": "आपके और आपके परिवार के लिए मिनटों में स्वास्थ्य सुरक्षा"
+}

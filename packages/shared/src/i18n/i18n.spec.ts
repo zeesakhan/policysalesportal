@@ -7,18 +7,20 @@ describe('i18n framework (ARCHITECTURE §2)', () => {
     expect(t('ar', 'common.continue')).toBe('متابعة');
   });
 
-  it('falls back to EN for locales not yet seeded (UR/HI/BN arrive in M2-T1)', () => {
-    expect(t('ur', 'common.continue')).toBe('Continue');
-    expect(t('hi', 'sc01.title')).toBe(t('en', 'sc01.title'));
+  it('all five locales resolve seeded keys in their own language', () => {
+    expect(t('ur', 'common.continue')).toBe('جاری رکھیں');
+    expect(t('hi', 'common.continue')).toBe('आगे बढ़ें');
+    expect(t('bn', 'common.continue')).toBe('এগিয়ে যান');
   });
 
   it('a key missing from the EN reference catalog is a defect', () => {
     expect(() => t('en', 'made.up.key')).toThrow(MissingContentKeyError);
   });
 
-  it('AR has full parity with EN (no missing keys in seeded catalogs)', () => {
-    expect(missingKeys('ar')).toEqual([]);
-    expect(missingKeys('en')).toEqual([]);
+  it('every locale has full parity with the EN reference catalog', () => {
+    for (const locale of LOCALES) {
+      expect(missingKeys(locale)).toEqual([]);
+    }
   });
 
   it('marks Arabic-script locales as RTL', () => {
