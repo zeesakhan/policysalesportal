@@ -43,6 +43,9 @@ export const applicationMachine = new StateMachine<ApplicationState, Application
   'application',
   APPLICATION_STATES,
   [
+    // Pre-quote declines: visit visa (UW-101), invalid EID (UW-102), confirmed
+    // sanctions match (UW-106/KYC-012) all terminate before screening completes
+    { from: 'draft', to: 'declined', ruleIds: ['UW-101', 'UW-102', 'UW-106'] },
     { from: 'draft', to: 'screened', ruleIds: ['KYC-001', 'KYC-011'] },
     { from: 'screened', to: 'quoted', ruleIds: ['QR-001'] },
     { from: 'quoted', to: 'declared', ruleIds: ['UW-501'] },
