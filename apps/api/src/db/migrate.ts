@@ -6,6 +6,7 @@ import { m004Identity } from './migrations/m004_identity';
 import { m005Screening } from './migrations/m005_screening';
 import { m006Details } from './migrations/m006_details';
 import { m007ProductsQuotes } from './migrations/m007_products_quotes';
+import { m008Declarations } from './migrations/m008_declarations';
 
 export interface Migration {
   id: string;
@@ -20,6 +21,7 @@ export const migrations: Migration[] = [
   m005Screening,
   m006Details,
   m007ProductsQuotes,
+  m008Declarations,
 ];
 
 export async function runMigrations(exec: SqlExec): Promise<string[]> {

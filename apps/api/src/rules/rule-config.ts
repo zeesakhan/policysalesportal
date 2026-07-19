@@ -39,6 +39,27 @@ export const defaultRuleConfig: RuleConfigEntry[] = [
     value: 'PLACEHOLDER_salary_threshold',
   },
   {
+    key: 'UW_506_LOADING_CAP_PCT',
+    ruleIds: ['UW-506'],
+    source: 'INSURER',
+    description: 'Cumulative loading cap; above → REFER (indicative 100%)',
+    value: 'PLACEHOLDER_loading_cap_pct',
+  },
+  {
+    key: 'UW_508_DECLINE_LIST',
+    ruleIds: ['UW-508'],
+    source: 'INSURER',
+    description: 'Declared conditions that decline (category: medical) — from signed insurer annex',
+    value: ['PLACEHOLDER_decline_condition_list'],
+  },
+  {
+    key: 'UW_207_RESTRICTED_OCCUPATIONS',
+    ruleIds: ['UW-207'],
+    source: 'INSURER',
+    description: 'Occupations requiring referral — from signed insurer annex',
+    value: ['PLACEHOLDER_occupation_list'],
+  },
+  {
     key: 'UW_102_NAME_MATCH_THRESHOLD',
     ruleIds: ['UW-102'],
     source: 'SPEC',

@@ -34,9 +34,20 @@ describe('rules-engine config service (CLAUDE.md §2, ARCHITECTURE §1)', () => 
   it('lists the [INSURER]/[VERIFY] seeded placeholders', () => {
     expect(engine.placeholderKeys()).toEqual([
       'QR_001_RATE_TABLE_CURRENT_VERSION',
+      'UW_207_RESTRICTED_OCCUPATIONS',
       'UW_301_SALARY_BAND_THRESHOLD_AED',
       'UW_502_AUTO_ACCEPT_LIST',
+      'UW_506_LOADING_CAP_PCT',
+      'UW_508_DECLINE_LIST',
     ]);
+  });
+
+  it('getNumber returns dev defaults for placeholders outside production only', () => {
+    expect(engine.getNumber('UW_506_LOADING_CAP_PCT', 100, 'development')).toBe(100);
+    expect(engine.getNumber('PAY_003_PAYMENT_WINDOW_HOURS', 99, 'development')).toBe(48);
+    expect(() => engine.getNumber('UW_506_LOADING_CAP_PCT', 100, 'production')).toThrow(
+      /not numeric/,
+    );
   });
 
   it('refuses production boot while rule placeholders remain; allows dev/uat', () => {
@@ -68,7 +79,7 @@ describe('CONFIG-REGISTER renderer', () => {
     for (const entry of defaultRuleConfig) {
       expect(md).toContain(`\`${entry.key}\``);
     }
-    expect(md).toContain('Placeholders remaining: **3**');
+    expect(md).toContain('Placeholders remaining: **6**');
     expect(md).toContain('**PLACEHOLDER**');
     // resolved values are printed; placeholders are not leaked as values
     expect(md).toContain('`48`');
