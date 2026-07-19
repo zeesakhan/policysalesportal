@@ -12,6 +12,7 @@ import { m010UwReadReferred } from './migrations/m010_uw_read_referred';
 import { m011Payments } from './migrations/m011_payments';
 import { m012Resume } from './migrations/m012_resume';
 import { m013Lifecycle } from './migrations/m013_lifecycle';
+import { m014InsurerRatesRead } from './migrations/m014_insurer_rates_read';
 
 export interface Migration {
   id: string;
@@ -32,6 +33,7 @@ export const migrations: Migration[] = [
   m011Payments,
   m012Resume,
   m013Lifecycle,
+  m014InsurerRatesRead,
 ];
 
 export async function runMigrations(exec: SqlExec): Promise<string[]> {

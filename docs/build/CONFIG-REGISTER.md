@@ -1,5 +1,5 @@
 # CONFIG-REGISTER.md — Rule Configuration Register
-**Generated:** 2026-07-19T17:03:29.532Z — do not edit by hand; run `pnpm gen:config-register`.
+**Generated:** 2026-07-19T17:29:25.065Z — do not edit by hand; run `pnpm gen:config-register`.
 
 Placeholders remaining: **9** (production refuses to start unless this is 0 — CLAUDE.md §2).
 

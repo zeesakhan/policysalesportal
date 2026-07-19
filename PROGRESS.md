@@ -2,9 +2,9 @@
 Update at the end of EVERY session (CLAUDE.md §3). This file is the resume point: a new session must be able to continue from this file alone.
 
 ## Current State
-- **Milestone:** M4 **complete** (UAT: 42/42 WP-12 Part B scenarios automated and passing, zero open defects; manual physical scripts written but NOT executed — see uat/UAT-REPORT.md §4)
-- **Next task:** M5 mock-safe items (authz sweep, runbooks, RELEASE-READINESS walkthrough)
-- **Gates:** GATE-1 ☑ pre-approved (D-B2; demo evidence delivered — `pnpm demo`)  ·  GATE-2 ☑ pre-approved (D-B2; UAT report delivered — `uat/UAT-REPORT.md`, automated evidence complete, manual evidence explicitly outstanding)  ·  Launch ☐
+- **Milestone:** M5 mock-safe items **complete** (authz sweep, secrets audit, runbooks, RELEASE-READINESS walkthrough). M5-T1 (real adapters) and M5-T4 (real-infra load test) remain genuinely blocked — see RELEASE-READINESS-WALKTHROUGH.md.
+- **Next task:** none remaining in the mock-buildable scope. All further work requires product-owner action: AWS account (B1), signed insurer annex (9 CONFIG-REGISTER placeholders), ICP/MOHRE/screening/WhatsApp credentials (M5-T1), licensing-model decision (WP-02 REG-001), and the WP-12 Part C physical sign-off.
+- **Gates:** GATE-1 ☑ pre-approved (D-B2; demo evidence delivered — `pnpm demo`)  ·  GATE-2 ☑ pre-approved (D-B2; UAT report delivered — `uat/UAT-REPORT.md`, automated evidence complete, manual evidence explicitly outstanding)  ·  Launch ☐ (blocked on the items above, per RELEASE-READINESS-WALKTHROUGH.md — launch decision is the product owner's alone)
 
 ## Task Log
 | Task | Status | Session date | Notes / rule IDs touched |
@@ -42,7 +42,9 @@ Update at the end of EVERY session (CLAUDE.md §3). This file is the resume poin
 | M4-T3 | **done** | 2026-07-19 | 3 manual scripts written to `uat/manual/`: typing-centre assisted physical flow (JB-02/06, TC-04 print), Arabic/RTL visual check (REG-061), WhatsApp readability in 5 languages (PAY-024). Each has a step-by-step checklist + sign-off table. **Honestly marked NOT YET EXECUTED** — they require real hardware (card reader, printer), a live WhatsApp Business API with approved templates (M5-T1), and native-language reviewers, none of which exist in this build environment. |
 | M4-T4 | **done** | 2026-07-19 | Defect cycle: 3 defects found while authoring scenarios, all fixed at the code (never the test) — TEN-011 tenant-suspension gate was unenforced (High, fixed in `entry.service.ts`); UW-306 maternity notice was cited but never implemented (Medium, fixed in `quote.service.ts`, see gap G2 below); PAN-checker false-positived on random UUIDs (Low, fixed in `check-pan-patterns.mjs` at the root cause). See `uat/DEFECT-LOG.md`. Zero open defects. |
 | M4-T5 | **done** | 2026-07-19 | `uat/UAT-REPORT.md` produced: 42/42 scenarios pass, 0 open critical/high defects, security-relevant scenarios (U-63/U-71/U-72) evidenced, manual evidence pack explicitly flagged outstanding (not glossed over). GATE-2 recorded pre-approved per D-B2 — automated behaviour ready; manual evidence remains a real RELEASE-READINESS item for M5. |
-| M5-mock | not started | | |
+| M5-T2-authz | **done** | 2026-07-19 | WP-09 §3 permission-matrix authz sweep (`apps/api/src/security/authz-matrix.spec.ts`): one test block per matrix row × representative roles, 18 tests. Found and fixed a real gap — quotes had no read policy for insurer `rates_manager` (WP-09: "Insurer rates: R" on Quotes); added migration `014_insurer_rates_read`. Secrets audit: clean — only `.env.example` with PLACEHOLDER_ values is tracked, no real credentials committed. MFA/session-policy (TEN-013) and OWASP scan remain open — no real IdP or deployed target exists yet (see walkthrough). |
+| M5-T3-runbooks | **done** | 2026-07-19 | 4 runbooks written to `docs/ops/`: registration-failure queue [PAY-023], reconciliation break [PAY-030/MIS-002], tenant suspension [TEN-011], incident comms [J-R4/KYC-013]. Written and internally consistent with the built system; live walkthrough with an ops team is a human action still to schedule. |
+| M5-T5-walkthrough | **done** | 2026-07-19 | `docs/build/RELEASE-READINESS-WALKTHROUGH.md`: every RELEASE-READINESS.md line annotated done/partial/open with an evidence link or the specific real-world blocker (no AWS account, no signed insurer annex, no real credentials, no deployed target). Summary: 5 done, 2 partial, 22 open — every open item traces to one of three root causes, none closeable by further coding here. M5-T1 (real adapters) and M5-T4 (load test vs real infra) explicitly out of scope for this session — recorded as blocked, not skipped silently. |
 
 ## Blocked — needs product owner
 | # | Item | What is needed | Raised | Resolved |
