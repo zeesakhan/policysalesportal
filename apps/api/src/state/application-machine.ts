@@ -53,6 +53,8 @@ export const applicationMachine = new StateMachine<ApplicationState, Application
     { from: 'uw_decided', to: 'payment_pending', ruleIds: ['PAY-003'] },
     { from: 'uw_decided', to: 'declined', ruleIds: ['REF-023'] },
     { from: 'payment_pending', to: 'paid', ruleIds: ['PAY-003'] },
+    // PAY-003: 48h window expiry returns the application to quoted (QR-005 still governs)
+    { from: 'payment_pending', to: 'quoted', ruleIds: ['PAY-003', 'QR-005'] },
     { from: 'paid', to: 'issued', ruleIds: ['PAY-020', 'UW-107'], guard: forbidBackdating },
     { from: 'issued', to: 'registered', ruleIds: ['PAY-022'] },
     { from: 'registered', to: 'delivered', ruleIds: ['PAY-023'] },
