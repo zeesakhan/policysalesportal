@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpException,
+  Inject,
   Param,
   Post,
   Query,
@@ -56,7 +57,7 @@ export class EngineController {
   readonly rules = new RulesEngine(defaultRuleConfig);
   readonly otp = new OtpAttestationService(this.sms);
 
-  constructor(private readonly db: Db) {}
+  constructor(@Inject('DB') private readonly db: Db) {}
 
   private async guard<T>(fn: () => Promise<T>): Promise<T> {
     try {
