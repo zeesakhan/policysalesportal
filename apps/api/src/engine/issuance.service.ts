@@ -55,10 +55,18 @@ export async function orchestrateIssuance(
     startDate: startDate.toISOString().slice(0, 10),
   });
 
+  const endDate = new Date(startDate);
+  endDate.setFullYear(endDate.getFullYear() + 1);
   await exec.query(
-    `INSERT INTO policies (tenant_id, application_id, policy_number, status, issued_at)
-     VALUES ($1, $2, $3, 'issued', now())`,
-    [args.tenantId, args.applicationId, issued.policyNumber],
+    `INSERT INTO policies (tenant_id, application_id, policy_number, status, issued_at, start_date, end_date)
+     VALUES ($1, $2, $3, 'issued', now(), $4, $5)`,
+    [
+      args.tenantId,
+      args.applicationId,
+      issued.policyNumber,
+      startDate.toISOString().slice(0, 10),
+      endDate.toISOString().slice(0, 10),
+    ],
   );
   await transitionApplication(exec, {
     applicationId: args.applicationId,

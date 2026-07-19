@@ -96,6 +96,18 @@ export async function captureIdentity(
     return { outcome: 'declined', customerCategory: 'identity' };
   }
 
+  // ---- END-015: purchase-cancel-refund abuse block (compliance review) ----
+  const blocked = await system((tx) =>
+    tx.query<{ id: string }>('SELECT id FROM purchase_blocks WHERE eid = $1', [eid]),
+  );
+  if (blocked.rows.length > 0) {
+    throw new JourneyRuleError(
+      'END-015',
+      'purchases are blocked for this person pending compliance review',
+      'verification',
+    );
+  }
+
   // ---- decline cooling (J-R3): cross-channel, EID-keyed, forces manual UW ----
   const coolingDays = rules.get<number>('J_R3_DECLINE_COOLING_DAYS');
   const cooling = await system((tx) =>

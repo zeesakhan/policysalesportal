@@ -2,8 +2,8 @@
 Update at the end of EVERY session (CLAUDE.md §3). This file is the resume point: a new session must be able to continue from this file alone.
 
 ## Current State
-- **Milestone:** M2 **complete** (five portals functional per WP-13 screen lists, all wrapping the one engine API)
-- **Next task:** M3-T1 (endorsement catalogue END-002 incl. newborn SLA warning, EID-addition task)
+- **Milestone:** M3 **complete** (lifecycle + money: endorsements, cancellations/refunds with clawback, renewals, ledgers, reports — reconciling to the three-way match)
+- **Next task:** M4-T1 (UAT environment seeded with UAT-PLAN data pack; mocks deterministic)
 - **Gates:** GATE-1 ☑ pre-approved (D-B2; demo evidence delivered — `pnpm demo`)  ·  GATE-2 ☐ pre-approved pending M4 report (D-B2)  ·  Launch ☐
 
 ## Task Log
@@ -32,7 +32,12 @@ Update at the end of EVERY session (CLAUDE.md §3). This file is the resume poin
 | M2-T4 | **done** | 2026-07-19 | Insurer/TPA portal IN-01/03/05/06: referral queue with SLA clocks + accept/accept-with-terms/decline recording [REF-020..024], versioned rate-table publisher [QR-001/030], campaigns view [REG-005], registration-ops queue with retry [PAY-023]. |
 | M2-T5 | **done** | 2026-07-19 | Platform admin AD-01/03/07/08: tenant lifecycle with status switch [TEN-010..012], compliance workbench dispositions [KYC-012], audit viewer by entity [MIS-010], three-way-match exceptions [PAY-030]. |
 | M2-T6 | **done** | 2026-07-19 | Affiliate: attribution flows through SC-01 (QR-023 code capture on start), affiliate view shows counts/conversions only — zero PII [TEN-003]; share-link with ?aff= code. |
-| M3-T1 | not started | | |
+| M3-T1 | **done** | 2026-07-19 | Endorsement catalogue (`lifecycle.service.ts`) [END-001..004]: newborn addition with day-20 SLA warning / 30-day hard SLA [REG-024] + END-003 pro-rata pricing; EID-addition resolves the KYC-002 ops task; UW-relevant corrections → referral [END-004]; mid-term plan upgrade rejected [END-002f]. |
+| M3-T2 | **done** | 2026-07-19 | Cancellation/refunds: reason capture [END-010], insurer-table refund computation shown pre-confirm [END-011, config placeholder + dev default], mandatory visa warning acknowledgement [END-012], clawback cascade commission+payouts [END-014/QR-022], abuse control — 2 cancel cycles/12mo → purchase block + EDD case [END-015/KYC-020], block enforced at identity capture. |
+| M3-T3 | **done** | 2026-07-19 | Renewals: 60/30/7-day notices, lapse sweep [END-021], one-tap renewal evaluation re-runs age eligibility (UW-202/503 at renewal) against current rate table [END-020]. |
+| M3-T4 | **done** | 2026-07-19 | Ledgers (`money.service.ts`): commission receivable with REG-004 10-business-day aging [QR-020], downstream payouts accrue ONLY on registered [QR-021] (config placeholders + dev defaults), payout statements accrued/paid/clawed. |
+| M3-T5 | **done** | 2026-07-19 | Reports (`reports.service.ts`) [MIS-001..020]: daily sales register with STP/referral rates, exceptions (PAY-030 orphans + REF-012 SLA breaches with info-request pause), compliance pack (volumes only), conduct monitor [TEN-011], per-policy bordereau tying to commission, DSAR extract [MIS-011], metrics dictionary [MIS-020]. All exposed via REST for the portals. 10 tests across M3. |
+| M4-T1 | not started | | |
 
 ## Blocked — needs product owner
 | # | Item | What is needed | Raised | Resolved |

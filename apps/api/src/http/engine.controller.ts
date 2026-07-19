@@ -27,6 +27,31 @@ import { attemptRegistration, getTracker, orchestrateIssuance, threeWayMatch } f
 import { expirePaymentWindows, handlePaymentWebhook, requestPayment } from '../engine/payment.service';
 import { generateQuote, type QuoteOptions } from '../engine/quote.service';
 import { checkEddTriggers, resolveScreeningHold, runScreening } from '../engine/screening.service';
+import {
+  computeRefund,
+  evaluateRenewal,
+  requestCancellation,
+  requestEndorsement,
+  type EndorsementType,
+} from '../engine/lifecycle.service';
+import { accrueLedgers, commissionLedger, payoutStatement } from '../engine/money.service';
+import {
+  bordereau,
+  compliancePack,
+  conductMonitor,
+  dailySalesRegister,
+  dsarExtract,
+  exceptionsReport,
+  METRICS_DICTIONARY,
+} from '../engine/reports.service';
+
+type CancellationReason =
+  | 'leaving_uae'
+  | 'employer_cover'
+  | 'switched_insurer'
+  | 'visa_cancelled'
+  | 'dissatisfaction'
+  | 'other';
 import type { Emirate } from '../engine/regime';
 import { MockEmailAdapter } from '../integrations/email/mock';
 import { MockIcpAdapter } from '../integrations/icp_validation/mock';
@@ -548,6 +573,108 @@ export class EngineController {
       }
     }
     return { report };
+  }
+
+  // ------------------------------------------------------------- lifecycle
+  @Post('policies/:id/endorsements')
+  endorse(@Req() req: Request, @Param('id') id: string, @Body() body: { type: EndorsementType; detail?: Record<string, unknown> }) {
+    const ctx = portalContext(req);
+    return this.guard(() =>
+      this.db.run(ctx, (tx) =>
+        requestEndorsement(tx, { tenantId: ctx.tenantId!, policyId: id, actingUserId: ctx.userId, ...body }),
+      ),
+    );
+  }
+
+  @Get('policies/:id/refund')
+  refund(@Req() req: Request, @Param('id') id: string) {
+    const ctx = portalContext(req);
+    return this.db.run(ctx, (tx) => computeRefund(tx, this.rules, { policyId: id }));
+  }
+
+  @Post('policies/:id/cancel')
+  cancel(
+    @Req() req: Request,
+    @Param('id') id: string,
+    @Body() body: { reason: CancellationReason; visaWarningAcknowledged: boolean; replacementPolicyNumber?: string },
+  ) {
+    const ctx = portalContext(req);
+    return this.guard(() =>
+      this.db.run(ctx, (tx) =>
+        requestCancellation(tx, (fn) => this.db.runSystem(fn), this.rules, {
+          tenantId: ctx.tenantId!,
+          policyId: id,
+          actingUserId: ctx.userId,
+          ...body,
+        }),
+      ),
+    );
+  }
+
+  @Post('policies/:id/renewal-evaluation')
+  renewal(@Req() req: Request, @Param('id') id: string) {
+    const ctx = portalContext(req);
+    return this.db.run(ctx, (tx) => evaluateRenewal(tx, this.rules, { policyId: id }));
+  }
+
+  // --------------------------------------------------------------- money/MIS
+  @Post('admin/ledgers/accrue')
+  accrue(@Req() req: Request) {
+    const ctx = portalContext(req);
+    return this.db.run(ctx, (tx) => accrueLedgers(tx, this.rules));
+  }
+
+  @Get('statements/payouts')
+  payouts(@Req() req: Request) {
+    const ctx = portalContext(req);
+    return this.db.run(ctx, (tx) => payoutStatement(tx, ctx.tenantId!));
+  }
+
+  @Get('reports/commission-ledger')
+  commissions(@Req() req: Request) {
+    const ctx = portalContext(req);
+    return this.db.run(ctx, (tx) => commissionLedger(tx));
+  }
+
+  @Get('reports/sales-register')
+  salesRegister(@Req() req: Request) {
+    const ctx = portalContext(req);
+    return this.db.run(ctx, (tx) => dailySalesRegister(tx));
+  }
+
+  @Get('reports/exceptions')
+  exceptionsReport(@Req() req: Request) {
+    const ctx = portalContext(req);
+    return this.db.run(ctx, (tx) => exceptionsReport(tx));
+  }
+
+  @Get('reports/compliance-pack')
+  compliance(@Req() req: Request) {
+    const ctx = portalContext(req);
+    return this.db.run(ctx, (tx) => compliancePack(tx));
+  }
+
+  @Get('reports/conduct-monitor')
+  conduct(@Req() req: Request) {
+    const ctx = portalContext(req);
+    return this.db.run(ctx, (tx) => conductMonitor(tx));
+  }
+
+  @Get('reports/bordereau')
+  bordereauReport(@Req() req: Request, @Query('from') from: string, @Query('to') to: string) {
+    const ctx = portalContext(req);
+    return this.db.run(ctx, (tx) => bordereau(tx, { from, to }));
+  }
+
+  @Get('reports/dsar')
+  dsar(@Req() req: Request, @Query('eid') eid: string) {
+    const ctx = portalContext(req);
+    return this.db.run(ctx, (tx) => dsarExtract(tx, eid)); // MIS-011: compliance role via RLS
+  }
+
+  @Get('reports/metrics-dictionary')
+  metricsDictionary() {
+    return METRICS_DICTIONARY; // MIS-020
   }
 
   // ------------------------------------------------------------- dev-only

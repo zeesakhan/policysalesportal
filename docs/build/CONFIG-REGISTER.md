@@ -1,13 +1,16 @@
 # CONFIG-REGISTER.md — Rule Configuration Register
-**Generated:** 2026-07-19T07:13:21.412Z — do not edit by hand; run `pnpm gen:config-register`.
+**Generated:** 2026-07-19T17:03:29.532Z — do not edit by hand; run `pnpm gen:config-register`.
 
-Placeholders remaining: **6** (production refuses to start unless this is 0 — CLAUDE.md §2).
+Placeholders remaining: **9** (production refuses to start unless this is 0 — CLAUDE.md §2).
 
 | Key | Rule IDs | Source | Status | Value | Description |
 |---|---|---|---|---|---|
+| `END_011_REFUND_TABLE` | END-011 | [INSURER] | **PLACEHOLDER** | — | Refund basis per filed product terms (pre-registration / pro-rata / short-rate, min earned premium) |
 | `J_R3_DECLINE_COOLING_DAYS` | REF-023 | [SPEC] | set | `30` | Decline cooling period keyed to EID before re-application |
 | `PAY_003_PAYMENT_WINDOW_HOURS` | PAY-003 | [SPEC] | set | `48` | Payment window after UW accept before the application lapses |
 | `QR_001_RATE_TABLE_CURRENT_VERSION` | QR-001, QR-030 | [INSURER] | **PLACEHOLDER** | — | Current versioned rate-table pointer; quotes snapshot this version |
+| `QR_020_COMMISSION_PCT` | QR-020 | [INSURER] | **PLACEHOLDER** | — | Insurer→licensed-entity commission % per partner agreement (indicative 5–10%) |
+| `QR_021_PAYOUT_TABLE` | QR-021 | [INSURER] | **PLACEHOLDER** | — | Downstream payout table: broker % / typing-centre AED / affiliate AED — business to set |
 | `REF_010_SLA_COMPLIANCE_DAYS` | REF-010 | [SPEC] | set | `1` | Compliance queue SLA (business days) |
 | `REF_010_SLA_EDD_DAYS` | REF-010 | [SPEC] | set | `2` | Enhanced due diligence SLA (business days) |
 | `REF_010_SLA_MEDICAL_REPORT_DAYS` | REF-010 | [SPEC] | set | `3` | Medical-report referral SLA (business days) |

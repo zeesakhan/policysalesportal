@@ -60,6 +60,27 @@ export const defaultRuleConfig: RuleConfigEntry[] = [
     value: ['PLACEHOLDER_occupation_list'],
   },
   {
+    key: 'END_011_REFUND_TABLE',
+    ruleIds: ['END-011'],
+    source: 'INSURER',
+    description: 'Refund basis per filed product terms (pre-registration / pro-rata / short-rate, min earned premium)',
+    value: 'PLACEHOLDER_refund_table',
+  },
+  {
+    key: 'QR_020_COMMISSION_PCT',
+    ruleIds: ['QR-020'],
+    source: 'INSURER',
+    description: 'Insurer→licensed-entity commission % per partner agreement (indicative 5–10%)',
+    value: 'PLACEHOLDER_commission_pct',
+  },
+  {
+    key: 'QR_021_PAYOUT_TABLE',
+    ruleIds: ['QR-021'],
+    source: 'INSURER',
+    description: 'Downstream payout table: broker % / typing-centre AED / affiliate AED — business to set',
+    value: 'PLACEHOLDER_payout_table',
+  },
+  {
     key: 'UW_102_NAME_MATCH_THRESHOLD',
     ruleIds: ['UW-102'],
     source: 'SPEC',
