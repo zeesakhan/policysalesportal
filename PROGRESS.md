@@ -2,9 +2,9 @@
 Update at the end of EVERY session (CLAUDE.md §3). This file is the resume point: a new session must be able to continue from this file alone.
 
 ## Current State
-- **Milestone:** M0 **complete** (done-criteria: engine skeleton boots ✓, RLS proven by test ✓, placeholder guard works ✓)
-- **Next task:** M1-T8 (SC-08/09: review + OTP attestation; mock payment adapter, 48h window PAY-003, idempotent webhooks)
-- **Gates:** GATE-1 ☐  ·  GATE-2 ☐  ·  Launch ☐
+- **Milestone:** M1 **complete** (done-criterion: all three regimes STP end-to-end on mocks ✓ — see `pnpm demo` and `e2e-regimes.spec.ts`)
+- **Next task:** M2-T1 (customer portal polish: mobile-first, 5 languages, RTL, accessibility pass)
+- **Gates:** GATE-1 ☑ pre-approved (D-B2; demo evidence delivered — `pnpm demo`)  ·  GATE-2 ☐ pre-approved pending M4 report (D-B2)  ·  Launch ☐
 
 ## Task Log
 | Task | Status | Session date | Notes / rule IDs touched |
@@ -21,7 +21,11 @@ Update at the end of EVERY session (CLAUDE.md §3). This file is the resume poin
 | M1-T5 | **done** | 2026-07-19 | Catalogue+quotes (SC-06): products/rate_tables/campaigns tables (insurer-owned, RLS rates_manager-write), demo seed; per-life rating [QR-006], itemised base+loadings+fees+VAT 5% [QR-003/REG-062], community=final vs enhanced=indicative, track/regime congruence [UW-103], campaigns-only discounts [QR-004/REG-005], 14-day validity + supersede-on-requote + paid-price honoured [QR-005/030]. 7 tests. |
 | M1-T6 | **done** | 2026-07-19 | Declarations (SC-07): D1–D8 + detail sub-form + MAF gate [UW-502], sensitive-consent hard gate [REG-050], TEN-002 store write-only for channels, status-only on persons; UW-501 clean, auto-accept loading [UW-502], cap→refer [UW-506], decline list [UW-508], pregnancy notice [UW-505], BMI refer [UW-504], community products refuse declarations [UW-206]; audit carries status only. 9 tests. |
 | M1-T7 | **done** | 2026-07-19 | Decision matrix (WP-04 §7): STP [UW-208/308/405/510] → payment_pending with auto-load re-rated final quote; REFER → UW-queue case with REF-010 SLA + REF-002 snapshot (statuses only) [UW-202/203/503/207/502, J-R3, REF-001]; DECLINE → declined + J-R3 cooling record + REF-023 community alternative, J-R4 category. WP-08: underwriterDecide (accept/decline/accept-with-terms) [REF-020/023/024], counter-offers with revised final quote, 7-day validity, OTP-attested acceptance [REF-021/022]. Underwriter RLS: read referred applications only; engine effects in system context. 9 tests. |
-| M1-T8 | not started | | |
+| M1-T8 | **done** | 2026-07-19 | Payment (SC-08/09): review OTP attestation gates payment [UW-108]; mock insurer payment link, reference-only storage [PAY-001/REG-002], 48h window [PAY-003] with expiry sweep→back to quoted, idempotent + re-orderable webhooks (late failure never regresses confirmed), max 3 retries [PAY-005]. 5 tests. |
+| M1-T9 | **done** | 2026-07-19 | Issuance (S9): paid→issued (insurer mock, UW-107 no-backdating guard)→registered [PAY-020..022]; KYC-011 stale-screening block; registration fail×3→highest-priority ops ticket + "processing — no action needed" [PAY-023]; ops retry resolves; three-state tracker (Paid→Issued→visa-ready); three-way match job detects paid-not-issued / issued-not-registered / confirmed-not-paid orphans [PAY-030]. 5 tests. |
+| M1-T10 | **done** | 2026-07-19 | Delivery (SC-10..12): policy pack via WhatsApp+email mocks after registered only [PAY-024/022]; my-policies by mobile; save & resume token 14-day retention with WhatsApp link + ONE abandonment reminder max [J-R2]. 5 tests. |
+| M1-T11 | **done** | 2026-07-19 | GATE-1 evidence: `pnpm demo` runs all three regimes STP end-to-end on mocks (quote→OTP→insurer payment→issue→register→deliver, visa-ready ✓) plus enhanced REFER→counter-offer flow; automated in `e2e-regimes.spec.ts` incl. audit-spine coverage check [J-R1]. GATE-1 recorded pre-approved per D-B2. |
+| M2-T1 | not started | | |
 
 ## Blocked — needs product owner
 | # | Item | What is needed | Raised | Resolved |

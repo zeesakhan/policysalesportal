@@ -16,7 +16,8 @@
     "test": "vitest run",
     "check:pan": "node scripts/check-pan-patterns.mjs",
     "check:i18n": "node scripts/check-i18n-keys.mjs",
-    "gen:config-register": "pnpm --filter @psp/api build && node apps/api/dist/rules/config-register-cli.js docs/build/CONFIG-REGISTER.md"
+    "gen:config-register": "pnpm --filter @psp/api build && node apps/api/dist/rules/config-register-cli.js docs/build/CONFIG-REGISTER.md",
+    "demo": "pnpm --filter @psp/api demo"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
